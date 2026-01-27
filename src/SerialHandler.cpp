@@ -218,7 +218,13 @@ String SerialHandler::generateJsonPayload() const {
             paramValue["value"] = kv.value.toInt();
         }
         else if (isFloat(kv.value)) {
-            paramValue["value"] = kv.value.toFloat();
+            // 强制对齐步长0.1：先四舍五入到1位小数，确保是0.1的整数倍
+            double value = kv.value.toDouble();
+            long roundedTenths = lround(value * 10.0);
+            double rounded = roundedTenths / 10.0;
+            // 调试输出：打印原始值和四舍五入后的值
+            //Serial.println("  浮点数处理: " + kv.value + " -> " + String(value, 8) + " -> " + String(rounded, 8));
+            paramValue["value"] = rounded;
         }
         else {
             paramValue["value"] = kv.value;
